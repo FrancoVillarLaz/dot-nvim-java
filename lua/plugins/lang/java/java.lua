@@ -1,0 +1,57 @@
+local M = {}
+
+local utils = require("plugins.lang.java.java-utils")
+local build_run = require("plugins.lang.java.build-run")
+local dependency = require("plugins.lang.java.dependency-management")
+local profiles = require("plugins.lang.java.profiles-management")
+local migrations = require("plugins.lang.java.migrations")
+
+-- Build/Run
+M.spring_boot_run = function()
+  build_run.spring_boot_run(utils)
+end
+M.spring_boot_run_profile = build_run.spring_boot_run_profile
+M.maven_build = build_run.maven_build
+M.gradle_build = build_run.gradle_build
+
+-- Dependencies
+M.add_dependency = function()
+  dependency.add_dependency(utils)
+end
+M.show_dependency_tree = function()
+  dependency.show_dependency_tree(utils)
+end
+M.check_vulnerabilities = function()
+  dependency.check_vulnerabilities(utils)
+end
+M.update_dependencies = function()
+  dependency.update_dependencies(utils)
+end
+
+-- Profiles
+M.switch_profile = profiles.switch_profile
+M.edit_properties = profiles.edit_properties
+M.edit_profile_properties = profiles.edit_profile_properties
+M.create_new_profile = profiles.create_new_profile
+M.show_profile_info = profiles.show_profile_info
+
+-- Migrations
+M.flyway_migrate = function()
+  migrations.flyway_migrate(utils)
+end
+M.create_migration = migrations.create_migration
+
+-- Generators
+M.file_generator = function()
+  require("plugins.lang.java.templates.java-files").file_generator(utils)
+end
+
+M.spring_boot_generator = function()
+  require("plugins.lang.java.templates.springboot-files").spring_boot_generator(utils)
+end
+
+M.generate_crud = function()
+  require("plugins.lang.java.templates.crud-files").generate_crud(utils)
+end
+
+return M
