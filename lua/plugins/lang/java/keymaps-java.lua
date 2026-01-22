@@ -11,6 +11,7 @@ local function setup_custom_java_keymaps()
   vim.keymap.set("n", "<leader>jn", java.file_generator, { desc = "New Java File" })
   vim.keymap.set("n", "<leader>js", java.spring_boot_generator, { desc = "New Spring File" })
   vim.keymap.set("n", "<leader>jg", java.generate_crud, { desc = "Generate CRUD" })
+  vim.keymap.set("n", "<leader>jgg", java.generate_getters_setters, { desc = "Generate Getters/Setters" })
 
   -- ========== DATABASE ==========
   vim.keymap.set("n", "<leader>jbr", java.flyway_migrate, { desc = "Run Flyway Migrate" })

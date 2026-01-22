@@ -54,4 +54,8 @@ M.generate_crud = function()
   require("plugins.lang.java.templates.crud-files").generate_crud(utils)
 end
 
+M.generate_getters_setters = function()
+  require("plugins.lang.java.templates.getters-setters").generate_getters_setters()
+end
+
 return M

@@ -6,7 +6,6 @@ return {
     -- URL: https://github.com/akinsho/bufferline.nvim
     -- Description: A snazzy buffer line (with tabpage integration) for Neovim.
     "akinsho/bufferline.nvim",
-    enabled = false, -- Disable this plugin
   },
   {
     -- Plugin para mejorar la experiencia de edición en Neovim
@@ -29,12 +28,12 @@ return {
   },
   {
     "tris203/precognition.nvim",
-    enabled = false,
+    enabled = true,
   },
 
   {
     "sphamba/smear-cursor.nvim",
-    enabled = false,
+    enabled = true,
   },
   {
     -- Plugin: claude-code.nvim

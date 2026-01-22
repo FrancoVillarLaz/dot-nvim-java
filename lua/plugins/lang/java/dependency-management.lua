@@ -86,4 +86,3 @@ M.check_vulnerabilities = check_vulnerabilities
 M.update_dependencies = update_dependencies
 
 return M
-

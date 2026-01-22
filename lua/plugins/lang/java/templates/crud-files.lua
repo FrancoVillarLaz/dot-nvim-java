@@ -4,6 +4,37 @@
 
 local M = {}
 
+-- Detect framework type (Spring Boot or Quarkus)
+local function detect_framework()
+  local project_root = vim.fn.getcwd()
+  local pom_file = project_root .. "/pom.xml"
+  local gradle_file = project_root .. "/build.gradle"
+  
+  -- Check pom.xml
+  if vim.fn.filereadable(pom_file) == 1 then
+    local pom_content = vim.fn.readfile(pom_file)
+    local pom_text = table.concat(pom_content, "\n")
+    if pom_text:match("quarkus") then
+      return "quarkus"
+    elseif pom_text:match("spring%-boot") then
+      return "spring"
+    end
+  end
+  
+  -- Check build.gradle
+  if vim.fn.filereadable(gradle_file) == 1 then
+    local gradle_content = vim.fn.readfile(gradle_file)
+    local gradle_text = table.concat(gradle_content, "\n")
+    if gradle_text:match("quarkus") then
+      return "quarkus"
+    elseif gradle_text:match("spring%-boot") then
+      return "spring"
+    end
+  end
+  
+  return "spring" -- Default to Spring Boot
+end
+
 function M.generate_crud()
   vim.ui.input({ prompt = "Nome da entidade (ex: Product): " }, function(name)
     if not name or name == "" then
@@ -25,24 +56,41 @@ function M.generate_crud()
       local package_name = utils.detect_package()
       local base_package = package_name:match("(.+)%.[^.]+$") or package_name
       local project_root = vim.fn.getcwd()
+      local framework = detect_framework()
+
+      local framework = detect_framework()
 
       -- Entity
       local entity_fields = ""
-      local constructor_params = ""
-      local constructor_assignments = ""
-
       for i, field in ipairs(fields) do
         entity_fields = entity_fields .. string.format("    private %s %s;\n", field.type, field.name)
-        if i > 1 then
-          constructor_params = constructor_params .. ", "
-          constructor_assignments = constructor_assignments .. "        "
-        end
-        constructor_params = constructor_params .. string.format("%s %s", field.type, field.name)
-        constructor_assignments = constructor_assignments .. string.format("this.%s = %s;\n", field.name, field.name)
       end
 
-      local entity_content = string.format(
-        [[
+      local entity_content
+      if framework == "quarkus" then
+        -- Quarkus Entity with Panache
+        entity_content = string.format(
+          [[
+package %s.model;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "%s")
+public class %s extends PanacheEntity {
+
+%s}
+]],
+          base_package,
+          name:lower(),
+          name,
+          entity_fields
+        )
+      else
+        -- Spring Boot Entity
+        entity_content = string.format(
+          [[
 package %s.model;
 
 import jakarta.persistence.*;
@@ -63,15 +111,40 @@ public class %s {
 
 %s}
 ]],
-        base_package,
-        name:lower(),
-        name,
-        entity_fields
-      )
+          base_package,
+          name:lower(),
+          name,
+          entity_fields
+        )
+      end
 
       -- Repository
-      local repository_content = string.format(
-        [[
+      local repository_content
+      if framework == "quarkus" then
+        -- Quarkus Repository with Panache
+        repository_content = string.format(
+          [[
+package %s.repository;
+
+import %s.model.%s;
+import io.quarkus.hibernate.orm.panache.PanacheRepository;
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public class %sRepository implements PanacheRepository<%s> {
+
+}
+]],
+          base_package,
+          base_package,
+          name,
+          name,
+          name
+        )
+      else
+        -- Spring Boot Repository
+        repository_content = string.format(
+          [[
 package %s.repository;
 
 import %s.model.%s;
@@ -83,12 +156,13 @@ public interface %sRepository extends JpaRepository<%s, Long> {
 
 }
 ]],
-        base_package,
-        base_package,
-        name,
-        name,
-        name
-      )
+          base_package,
+          base_package,
+          name,
+          name,
+          name
+        )
+      end
 
       -- DTO Request
       local dto_request_fields = ""
