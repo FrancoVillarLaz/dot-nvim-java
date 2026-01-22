@@ -38,7 +38,7 @@ When you open a `.java` file, the following happens automatically:
 
 ### First Command
 
-Press `<leader>jpi` to see detected project type.
+Press `<leader>ji` to see detected project type and framework.
 
 ---
 
@@ -84,10 +84,11 @@ All Java keybindings start with `<leader>j`. Use `<leader>?` to see all availabl
 
 ### General
 
-| Binding       | Action            | Notes                          |
-| ------------- | ----------------- | ------------------------------ |
-| `<leader>jpi` | Show project info | Displays detected project type |
-| `<leader>?`   | Show all keymaps  | Uses which-key plugin          |
+| Binding      | Action            | Notes                                    |
+| ------------ | ----------------- | ---------------------------------------- |
+| `<leader>ji` | Show project info | Framework, Build Tool, Package detection |
+| `<leader>jc` | Open config file  | Opens application.properties/yml         |
+| `<leader>?`  | Show all keymaps  | Uses which-key plugin                    |
 
 ---
 
@@ -99,7 +100,6 @@ All Java keybindings start with `<leader>j`. Use `<leader>?` to see all availabl
 | ------------- | ---------------- | --------------------------------------------------- |
 | `<leader>jrs` | Run Spring Boot  | Starts `mvn spring-boot:run` or `./gradlew bootRun` |
 | `<leader>jrp` | Run with Profile | Runs with specific Maven profile                    |
-| `<leader>jr`  | Quick run        | Auto-detects project type and runs                  |
 
 **Example Usage:**
 
@@ -113,24 +113,15 @@ nvim src/main/java/Application.java
 
 ### Maven Build
 
-| Binding       | Command       | Purpose                  |
-| ------------- | ------------- | ------------------------ |
-| `<leader>jrm` | Maven Build   | Runs `mvn clean package` |
-| `<leader>jB`  | Build project | Runs `JavaBuild` command |
+| Binding       | Command     | Purpose                  |
+| ------------- | ----------- | ------------------------ |
+| `<leader>jrm` | Maven Build | Runs `mvn clean package` |
 
 ### Gradle Build
 
 | Binding       | Command      | Purpose                |
 | ------------- | ------------ | ---------------------- |
 | `<leader>jrg` | Gradle Build | Runs `./gradlew build` |
-
-### Quick Commands
-
-| Command        | Usage                               |
-| -------------- | ----------------------------------- |
-| `:JavaRun`     | Run application (auto-detects type) |
-| `:JavaBuild`   | Compile/build project               |
-| `:JavaInstall` | Install dependencies (mvn/gradle)   |
 
 ---
 
@@ -145,9 +136,16 @@ nvim src/main/java/Application.java
 **Features:**
 
 - Automatic package detection from directory structure
-- POJO generation
-- Getters/setters generation
+- Class, Interface, Enum, Record, Abstract Class generation
 - Constructor generation
+
+**Types available:**
+
+- Class
+- Interface
+- Enum
+- Record
+- Abstract Class
 
 **Example:**
 
@@ -157,9 +155,9 @@ nvim UserModel.java
 <leader>jn  # Opens generator with correct package
 
 # Choose options:
-# - Class type (POJO, Service, Controller, etc.)
-# - Add fields
-# - Generate getters/setters
+# - Class type (Class, Interface, Enum, etc.)
+# - Enter name
+# - File is created with correct package
 ```
 
 ### Spring Boot Generator
@@ -170,19 +168,52 @@ nvim UserModel.java
 
 **Types available:**
 
-- `@Controller` - REST endpoint
-- `@Service` - Business logic
-- `@Repository` - Data access
-- `@Entity` - JPA entity
-- `@Configuration` - Spring config class
+- `Controller` - REST Controller
+- `Service` - Business logic service
+- `Repository` - JPA Repository
+- `Entity` - JPA entity
+- `DTO Request` - Request DTO record
+- `DTO Response` - Response DTO record
+- `Mapper` - Mapper interface
+- `Config` - Spring configuration class
+- `Exception` - Custom exception
+- `Exception Handler` - Global exception handler
 
 **Example:**
 
 ```bash
 <leader>js
 # Choose: Service
-# Name: UserService
-# Auto-generates with Spring annotations and methods
+# Name: User
+# Auto-generates UserService.java with Spring @Service annotation
+```
+
+### Quarkus Generator
+
+| Binding      | Action                     |
+| ------------ | -------------------------- |
+| `<leader>jq` | Generate Quarkus component |
+
+**Types available:**
+
+- `Controller` - JAX-RS Resource (REST endpoint)
+- `Service` - Business logic service (@ApplicationScoped)
+- `Repository` - Panache Repository
+- `Entity` - Panache Entity
+- `DTO Request` - Request DTO record
+- `DTO Response` - Response DTO record
+- `Mapper` - Mapper interface
+- `Config` - Configuration bean
+- `Exception` - Custom exception
+- `Exception Handler` - Exception mapper
+
+**Example:**
+
+```bash
+<leader>jq
+# Choose: Controller
+# Name: User
+# Auto-generates UserResource.java with JAX-RS annotations
 ```
 
 ### CRUD Generator
@@ -194,18 +225,36 @@ nvim UserModel.java
 **Generates:**
 
 - JPA Entity class
-- Spring Data Repository
+- Repository (Spring Data or Panache)
 - Service class (CRUD operations)
-- REST Controller with endpoints
+- REST Controller/Resource with endpoints
+
+**Framework Detection:**
+
+- Automatically detects Spring Boot or Quarkus
+- Generates appropriate annotations and code style
+- Supports Maven and Gradle projects
 
 **Example:**
 
 ```bash
-# In a Spring Boot project
+# In a Spring Boot or Quarkus project
 <leader>jg
-# Name: User
-# Generates: User.java, UserRepository.java, UserService.java, UserController.java
+# Name: Product
+# Generates complete CRUD stack for Product entity
 ```
+
+### Getters/Setters Generator
+
+| Binding       | Action                   |
+| ------------- | ------------------------ |
+| `<leader>jgg` | Generate Getters/Setters |
+
+**Features:**
+
+- Detects all fields in current class
+- Generates getters and setters
+- Smart insertion at end of class
 
 ---
 
@@ -417,24 +466,26 @@ RECOMMENDATION: Upgrade to 2.17.0 or higher
 ~/.config/nvim/
 ├── lua/
 │   ├── config/
-│   │   ├── java-keymaps.lua              # Basic Java commands
 │   │   ├── util/java-utils.lua            # Utility functions
-│   │   └── autocmds.lua                   # Auto-loading
+│   │   └── autocmds.lua                   # Auto-loading Java keymaps
 │   └── plugins/
 │       └── lang/
-│           ├── java.lua                   # Main JDTLS config
+│           ├── lsp.lua                    # Main JDTLS config
 │           ├── mason.lua                  # Tool installation
 │           └── java/
-│               ├── keymaps-java.lua       # Advanced keybindings
+│               ├── keymaps-java.lua       # All Java keybindings
+│               ├── java.lua               # Main Java module
 │               ├── java-utils.lua         # Project utilities
 │               ├── build-run.lua          # Build/run scripts
 │               ├── dependency-management.lua
 │               ├── profiles-management.lua
 │               ├── migrations.lua         # Flyway integration
 │               └── templates/
-│                   ├── java-files.lua     # Class templates
-│                   ├── springboot-files.lua
-│                   └── crud-files.lua
+│                   ├── java-files.lua     # Java class templates
+│                   ├── springboot-files.lua  # Spring Boot templates
+│                   ├── quarkus-files.lua     # Quarkus templates
+│                   ├── crud-files.lua        # CRUD generator
+│                   └── getters-setters.lua   # Getters/Setters
 ```
 
 ### Key Configuration Variables
@@ -490,7 +541,8 @@ end
 
 ```
 GENERAL
-  <leader>jpi  → Project Info
+  <leader>ji   → Project Info (Framework, Build Tool, Package)
+  <leader>jc   → Open Config File (application.properties/yml)
   <leader>?    → Show All Keymaps
 
 BUILD & RUN
@@ -500,25 +552,28 @@ BUILD & RUN
   <leader>jrg  → Gradle Build
 
 GENERATORS
-  <leader>jn   → New Java Class
-  <leader>js   → New Spring Component
-  <leader>jg   → CRUD Generator
+  <leader>jn   → New Java Class (Class/Interface/Enum/Record)
+  <leader>js   → New Spring Boot Component
+  <leader>jq   → New Quarkus Component
+  <leader>jg   → Generate CRUD (Auto-detects framework)
+  <leader>jgg  → Generate Getters/Setters
 
 DATABASE
-  <leader>jbr  → Run Migrations
-  <leader>jbn  → New Migration
+  <leader>jbr  → Run Flyway Migrations
+  <leader>jbn  → New Migration File
 
 PROFILES
   <leader>jps  → Switch Profile
   <leader>jpn  → New Profile
-  <leader>jpe  → Edit Properties
+  <leader>jpe  → Edit application.properties
+  <leader>jpp  → Edit Profile Properties
   <leader>jpi  → Profile Info
 
 DEPENDENCIES
   <leader>jda  → Add Dependency
   <leader>jdt  → Dependency Tree
   <leader>jdu  → Update Dependencies
-  <leader>jdv  → Security Check
+  <leader>jdv  → Security Check (Vulnerabilities)
 ```
 
 ---
@@ -546,6 +601,7 @@ For issues:
 
 ---
 
-**Last Updated:** January 20, 2026  
+**Last Updated:** January 22, 2026  
 **NeoVim Version:** 0.9+  
-**Java:** JDK 21+
+**Java:** JDK 21+  
+**Frameworks:** Spring Boot, Quarkus

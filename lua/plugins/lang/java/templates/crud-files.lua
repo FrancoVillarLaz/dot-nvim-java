@@ -52,7 +52,7 @@ function M.generate_crud()
         end
       end
 
-      local utils = require("plugins.java.java-utils")
+      local utils = require("plugins.lang.java.java-utils")
       local package_name = utils.detect_package()
       local base_package = package_name:match("(.+)%.[^.]+$") or package_name
       local project_root = vim.fn.getcwd()

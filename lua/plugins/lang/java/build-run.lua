@@ -67,7 +67,7 @@ local function spring_boot_run_with_profile()
       return
     end
 
-    local utils = require("plugins.java.java-utils")
+    local utils = require("plugins.lang.java.java-utils")
     local build_tool = utils.get_build_tool()
     if build_tool == "maven" then
       vim.cmd(string.format("botright split | terminal mvn spring-boot:run -Dspring-boot.run.profiles=%s", profile))

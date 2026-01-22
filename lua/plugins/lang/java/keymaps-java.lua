@@ -10,8 +10,12 @@ local function setup_custom_java_keymaps()
   -- ========== GERADORES ==========
   vim.keymap.set("n", "<leader>jn", java.file_generator, { desc = "New Java File" })
   vim.keymap.set("n", "<leader>js", java.spring_boot_generator, { desc = "New Spring File" })
+  vim.keymap.set("n", "<leader>jq", java.quarkus_generator, { desc = "New Quarkus File" })
   vim.keymap.set("n", "<leader>jg", java.generate_crud, { desc = "Generate CRUD" })
   vim.keymap.set("n", "<leader>jgg", java.generate_getters_setters, { desc = "Generate Getters/Setters" })
+
+  -- ========== PROJECT INFO ==========
+  vim.keymap.set("n", "<leader>ji", java.show_project_info, { desc = "Project Info" })
 
   -- ========== DATABASE ==========
   vim.keymap.set("n", "<leader>jbr", java.flyway_migrate, { desc = "Run Flyway Migrate" })
@@ -29,6 +33,17 @@ local function setup_custom_java_keymaps()
   vim.keymap.set("n", "<leader>jdt", java.show_dependency_tree, { desc = "Dependency Tree" })
   vim.keymap.set("n", "<leader>jdu", java.update_dependencies, { desc = "Update Dependencies" })
   vim.keymap.set("n", "<leader>jdv", java.check_vulnerabilities, { desc = "Check Vulnerabilities" })
+
+  -- ========== CONFIG ==========
+  vim.keymap.set("n", "<leader>jc", function()
+    local java_utils = require("config.util.java-utils")
+    local config_file = java_utils.get_config_file()
+    if config_file then
+      vim.cmd("edit " .. config_file)
+    else
+      vim.notify("No configuration file found", vim.log.levels.WARN)
+    end
+  end, { desc = "Open Config File" })
 
   -- Setup which-key
   local wk_ok, wk = pcall(require, "which-key")

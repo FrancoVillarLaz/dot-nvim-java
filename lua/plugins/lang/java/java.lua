@@ -50,12 +50,21 @@ M.spring_boot_generator = function()
   require("plugins.lang.java.templates.springboot-files").spring_boot_generator(utils)
 end
 
+M.quarkus_generator = function()
+  require("plugins.lang.java.templates.quarkus-files").quarkus_generator(utils)
+end
+
 M.generate_crud = function()
   require("plugins.lang.java.templates.crud-files").generate_crud(utils)
 end
 
 M.generate_getters_setters = function()
   require("plugins.lang.java.templates.getters-setters").generate_getters_setters()
+end
+
+-- Project Info
+M.show_project_info = function()
+  utils.show_project_info()
 end
 
 return M

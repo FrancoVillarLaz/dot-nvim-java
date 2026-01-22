@@ -3,4 +3,4 @@
 -- Add any additional autocmds here
 
 -- Cargar keymaps específicos para Java
-require("config.java-keymaps")
+require("plugins.lang.java.keymaps-java")

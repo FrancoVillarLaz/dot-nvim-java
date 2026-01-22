@@ -63,6 +63,68 @@ function M.get_build_tool()
   return nil
 end
 
+-- Detect framework type
+function M.detect_framework()
+  local project_root = vim.fn.getcwd()
+  local pom_file = project_root .. "/pom.xml"
+  local gradle_file = project_root .. "/build.gradle"
+  local gradle_kts_file = project_root .. "/build.gradle.kts"
+
+  -- Check pom.xml
+  if vim.fn.filereadable(pom_file) == 1 then
+    local pom_content = read_file_lines(pom_file)
+    local pom_text = table.concat(pom_content, "\n")
+    if pom_text:match("quarkus") then
+      return "Quarkus"
+    elseif pom_text:match("spring%-boot") then
+      return "Spring Boot"
+    end
+  end
+
+  -- Check build.gradle
+  if vim.fn.filereadable(gradle_file) == 1 then
+    local gradle_content = read_file_lines(gradle_file)
+    local gradle_text = table.concat(gradle_content, "\n")
+    if gradle_text:match("quarkus") then
+      return "Quarkus"
+    elseif gradle_text:match("spring%-boot") then
+      return "Spring Boot"
+    end
+  end
+
+  -- Check build.gradle.kts
+  if vim.fn.filereadable(gradle_kts_file) == 1 then
+    local gradle_content = read_file_lines(gradle_kts_file)
+    local gradle_text = table.concat(gradle_content, "\n")
+    if gradle_text:match("quarkus") then
+      return "Quarkus"
+    elseif gradle_text:match("spring%-boot") then
+      return "Spring Boot"
+    end
+  end
+
+  return "Java"
+end
+
+-- Show project information
+function M.show_project_info()
+  local framework = M.detect_framework()
+  local build_tool = M.get_build_tool() or "Unknown"
+  local package_name = M.detect_package()
+  
+  local info = string.format(
+    "📦 Project Information\n\n" ..
+    "Framework: %s\n" ..
+    "Build Tool: %s\n" ..
+    "Package: %s",
+    framework,
+    build_tool,
+    package_name
+  )
+  
+  vim.notify(info, vim.log.levels.INFO)
+end
+
 -- Write Java file
 function M.write_java_file(dir, class_name, content)
   vim.fn.mkdir(dir, "p")
