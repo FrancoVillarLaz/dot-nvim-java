@@ -95,7 +95,7 @@ Configuración completa para desarrollo enterprise Java. Ver [JAVA_SETUP.md](JAV
 ### TypeScript / JavaScript
 
 - ✅ TSServer LSP con configuración optimizada
-- ✅ Prettier y ESLint integrados
+- ✅ Prettier
 - ✅ Auto imports y organización
 - ✅ React, Next.js, Node.js support
 
@@ -103,7 +103,6 @@ Configuración completa para desarrollo enterprise Java. Ver [JAVA_SETUP.md](JAV
 
 - ✅ Pyright LSP
 - ✅ Black formatter
-- ✅ Ruff linter
 - ✅ DAP debugger
 
 ### Go

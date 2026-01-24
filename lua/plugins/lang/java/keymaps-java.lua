@@ -1,6 +1,30 @@
 local function setup_custom_java_keymaps()
   local java = require("plugins.lang.java.java")
 
+  -- ========== LSP/IMPORTS ==========
+  vim.keymap.set("n", "<leader>jo", function()
+    vim.lsp.buf.code_action({
+      apply = true,
+      context = { only = { "source.organizeImports" } }
+    })
+  end, { desc = "Organize Imports" })
+
+  vim.keymap.set("n", "<leader>jla", vim.lsp.buf.code_action, { desc = "LSP Code Actions" })
+  
+  vim.keymap.set("n", "<leader>jlm", function()
+    vim.lsp.buf.code_action({
+      apply = true,
+      context = { only = { "source.addMissingImports" } }
+    })
+  end, { desc = "Add Missing Imports" })
+
+  vim.keymap.set("n", "<leader>jlu", function()
+    vim.lsp.buf.code_action({
+      apply = true,
+      context = { only = { "source.removeUnusedImports" } }
+    })
+  end, { desc = "Remove Unused Imports" })
+
   -- ========== BUILD E RUN ==========
   vim.keymap.set("n", "<leader>jrs", java.spring_boot_run, { desc = "Run Spring Boot" })
   vim.keymap.set("n", "<leader>jrp", java.spring_boot_run_profile, { desc = "Run with Profile" })
@@ -54,8 +78,34 @@ local function setup_custom_java_keymaps()
       { "<leader>jb", group = "Database" },
       { "<leader>jp", group = "Profile" },
       { "<leader>jd", group = "Dependencies" },
+      { "<leader>jl", group = "LSP" },
     })
   end
+
+  -- ========== AUTOCMD: AUTO ORGANIZE IMPORTS ON SAVE ==========
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    buffer = 0, -- Only for current buffer (Java file)
+    callback = function()
+      -- Only run if this is actually a Java file
+      if vim.bo.filetype ~= "java" then
+        return
+      end
+      
+      local params = vim.lsp.util.make_range_params()
+      params.context = { only = { "source.organizeImports" } }
+      local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 5000)
+      for _, res in pairs(result or {}) do
+        for _, r in pairs(res.result or {}) do
+          if r.edit then
+            vim.lsp.util.apply_workspace_edit(r.edit, "utf-8")
+          else
+            vim.lsp.buf.execute_command(r.command)
+          end
+        end
+      end
+    end,
+    desc = "Auto organize imports (Java)"
+  })
 end
 
 -- Load keymaps when opening Java file

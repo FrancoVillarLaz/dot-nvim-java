@@ -7,7 +7,7 @@ return {
     opts = {
       ensure_installed = {
         "lua-language-server",
-        "typescript-language-server",
+        "vtsls",
         "jdtls",
         "java-debug-adapter",
         "java-test",

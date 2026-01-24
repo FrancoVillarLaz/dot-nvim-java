@@ -56,18 +56,11 @@ require("lazy").setup({
     -- Formatting plugins
     { import = "lazyvim.plugins.extras.formatting.biome" },
     { import = "lazyvim.plugins.extras.formatting.prettier" },
-    { import = "lazyvim.plugins.extras.formatting.prettier" },
-
-    -- Linting plugins
-    { import = "lazyvim.plugins.extras.linting.eslint" },
 
     -- Language support plugins
     { import = "lazyvim.plugins.extras.lang.json" },
     { import = "lazyvim.plugins.extras.lang.markdown" },
     { import = "lazyvim.plugins.extras.lang.java" },
-
-    -- modules: linting
-    { import = "lazyvim.plugins.extras.linting.eslint" },
 
     -- modules: lang
     { import = "lazyvim.plugins.extras.lang.typescript" },

@@ -245,8 +245,8 @@ return {
           { icon = " ", title = "Projects", section = "projects", indent = 2, padding = 1 },
           { section = "startup" },
         },
-preset = {
-        header = [[
+        preset = {
+          header = [[
        _________________________________________________________________________________
       /                                                                                 \
       | ███████╗██████╗  █████╗ ███╗   ██╗ ██████╗ ██╗   ██╗██╗      ██╗   ██╗██╗███╗   ███╗|
@@ -272,6 +272,21 @@ preset = {
           },
         },
       },
+    },
+  },
+
+  -- Plugin: nvim-neo-tree/neo-tree.nvim
+  -- Description: Neo-tree sidebar file manager positioned right.
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    branch = "v3.x",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "MunifTanjim/nui.nvim",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {
+      window = { position = "right" },
     },
   },
 }
