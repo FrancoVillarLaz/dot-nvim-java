@@ -296,4 +296,4 @@ MIT License - Ver [LICENSE](LICENSE) para más detalles
 
 **Última actualización:** 22 de enero de 2026  
 **NeoVim:** 0.9+  
-**Mantenido por:** @tu-usuario
+**Mantenido por:** @FrancoVillarLaz
