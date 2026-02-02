@@ -1,29 +1,34 @@
 return {
   "sphamba/smear-cursor.nvim",
   opts = {
-    stiffness_insert_mode = 0.7, -- 0.5      [0, 1]
-    damping_insert_mode = 0.95, -- 0.9      [0, 1]
-    distance_stop_animating = 0.5, -- 0.1      > 0
+    -- Configuración zen: movimiento suave y natural
+    stiffness_insert_mode = 0.3, -- Más suave en insert
+    damping_insert_mode = 0.98, -- Más amortiguado
+    distance_stop_animating = 0.3,
 
-    time_interval = 7, -- milliseconds
-    cursor_color = "#ff4000",
+    time_interval = 12, -- Más lento para ser zen
+    cursor_color = "#84a98c", -- Verde musgo zen
+
+    -- Partículas zen - más sutiles
     particles_enabled = true,
-    stiffness = 0.5,
-    trailing_stiffness = 0.2,
-    trailing_exponent = 5,
-    damping = 0.6,
+    stiffness = 0.3, -- Movimiento muy suave
+    trailing_stiffness = 0.1, -- Trail muy sutil
+    trailing_exponent = 3,
+    damping = 0.8,
     gradient_exponent = 0,
-    gamma = 1,
-    never_draw_over_target = true, -- if you want to actually see under the cursor
+    gamma = 1.2,
+    never_draw_over_target = true,
     hide_target_hack = true,
-    particle_spread = 1,
-    particles_per_second = 500,
-    particles_per_length = 50,
-    particle_max_lifetime = 800,
-    particle_max_initial_velocity = 20,
-    particle_velocity_from_cursor = 0.5,
-    particle_damping = 0.15,
-    particle_gravity = -50,
-    min_distance_emit_particles = 0,
+
+    -- Partículas zen - menos agresivas
+    particle_spread = 0.5,
+    particles_per_second = 200, -- Menos partículas
+    particles_per_length = 20, -- Menos densidad
+    particle_max_lifetime = 500, -- Vida más corta
+    particle_max_initial_velocity = 10, -- Más lento
+    particle_velocity_from_cursor = 0.3,
+    particle_damping = 0.25,
+    particle_gravity = -30, -- Menos gravedad
+    min_distance_emit_particles = 0.1,
   },
 }

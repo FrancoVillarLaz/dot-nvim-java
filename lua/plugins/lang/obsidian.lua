@@ -1,6 +1,6 @@
 return {
-  "epwalsh/obsidian.nvim",
-  version = "*",
+  "obsidian-nvim/obsidian.nvim",
+  version = "*", -- Siempre última release estable
   lazy = false,
   enabled = function()
     return not vim.g.disable_obsidian
@@ -11,47 +11,23 @@ return {
   opts = {
     workspaces = {
       {
-        name = "work",
-        path = "/home/franqui/Documentos/work",
-        note_frontmatter_func = function(note)
-          local aliases = {}
-          if note.title then
-            table.insert(aliases, note.title)
-          end
-          return {
-            id = note.id,
-            aliases = aliases,
-            tags = {},
-          }
-        end,
+        name = "work", -- O el nombre que vos quieras
+        path = "/home/franqui/Documentos/work", -- Este ES tu directorio de trabajo real
       },
     },
-    completion = { nvim_cmp = true },
-    picker = { name = "snacks.pick" },
+    completion = {
+      nvim_cmp = true, -- Si usás cmp, si no, ponelo false
+    },
+    picker = {
+      name = "snacks.pick", -- Cambia a "telescope.nvim" si lo preferís
+    },
     templates = {
       folder = "templates",
       date_format = "%Y-%m-%d-%a",
       time_format = "%H:%M",
     },
-    note_id_func = function(title)
-      local id = tostring(os.time())
-      local suffix = ""
-      if title ~= nil then
-        suffix = title:gsub(" ", "_"):gsub("[^A-Za-z0-9_%-]", ""):lower()
-        return id .. "-" .. suffix
-      else
-        return id
-      end
-    end,
-    new_notes_location = function(title)
-      if title and title:lower():match("david allen") then
-        return { notes_subdir = "hubs/eficiencia/david_allen" }
-      elseif title and title:lower():match("eficiencia") then
-        return { notes_subdir = "hubs/eficiencia" }
-      else
-        return { notes_subdir = "inbox" }
-      end
-    end,
+    notes_subdir = "hubs", -- Opcional, default es raíz del vault
+    new_notes_location = "notes_subdir",
     callbacks = {
       enter_note = function(_, note)
         if not note or not note.bufnr then

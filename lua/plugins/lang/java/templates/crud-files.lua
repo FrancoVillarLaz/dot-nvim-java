@@ -58,8 +58,6 @@ function M.generate_crud()
       local project_root = vim.fn.getcwd()
       local framework = detect_framework()
 
-      local framework = detect_framework()
-
       -- Entity
       local entity_fields = ""
       for i, field in ipairs(fields) do
@@ -217,8 +215,94 @@ public record %sResponseDTO(
       )
 
       -- Service
-      local service_content = string.format(
-        [[
+      local service_content
+      if framework == "quarkus" then
+        -- Quarkus Service using Panache Entity
+        service_content = string.format(
+          [[
+package %s.service;
+
+import %s.dto.%sRequestDTO;
+import %s.dto.%sResponseDTO;
+import %s.model.%s;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@ApplicationScoped
+public class %sService {
+
+    @Transactional
+    public %sResponseDTO create(%sRequestDTO dto) {
+        %s entity = new %s();
+        // TODO: Map DTO to Entity
+        entity.persist();
+        return toDTO(entity);
+    }
+
+    public List<%sResponseDTO> findAll() {
+        return %s.listAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public %sResponseDTO findById(Long id) {
+        %s entity = %s.findById(id);
+        if (entity == null) {
+            throw new RuntimeException("%s not found with id: " + id);
+        }
+        return toDTO(entity);
+    }
+
+    @Transactional
+    public %sResponseDTO update(Long id, %sRequestDTO dto) {
+        %s entity = %s.findById(id);
+        if (entity == null) {
+            throw new RuntimeException("%s not found with id: " + id);
+        }
+        // TODO: Update entity from DTO
+        return toDTO(entity);
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        %s entity = %s.findById(id);
+        if (entity == null) {
+            throw new RuntimeException("%s not found with id: " + id);
+        }
+        entity.delete();
+    }
+
+    private %sResponseDTO toDTO(%s entity) {
+        return new %sResponseDTO(
+            entity.id
+            // TODO: Add other fields
+        );
+    }
+}
+]],
+          base_package,
+          base_package, name,
+          base_package, name,
+          base_package, name,
+          name,
+          name, name,
+          name, name,
+          name,
+          name,
+          name, name, name, name,
+          name, name,
+          name, name, name,
+          name, name, name,
+          name, name,
+          name
+        )
+      else
+        -- Spring Boot Service
+        service_content = string.format(
+          [[
 package %s.service;
 
 import %s.dto.%sRequestDTO;
@@ -287,39 +371,108 @@ public class %sService {
     }
 }
 ]],
-        base_package,
-        base_package,
-        name,
-        base_package,
-        name,
-        base_package,
-        name,
-        base_package,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name
-      )
+          base_package,
+          base_package, name,
+          base_package, name,
+          base_package, name,
+          base_package, name,
+          name,
+          name,
+          name, name,
+          name, name,
+          name, name,
+          name,
+          name,
+          name, name,
+          name, name, name,
+          name,
+          name, name,
+          name
+        )
+      end
 
-      -- Controller
-      local controller_content = string.format(
-        [[
+      -- Controller/Resource
+      local controller_or_resource_content
+      local controller_filename
+      local controller_subpackage
+
+      if framework == "quarkus" then
+        -- Quarkus Resource (JAX-RS)
+        controller_filename = name .. "Resource"
+        controller_subpackage = "resource"
+        controller_or_resource_content = string.format(
+          [[
+package %s.resource;
+
+import %s.dto.%sRequestDTO;
+import %s.dto.%sResponseDTO;
+import %s.service.%sService;
+import jakarta.inject.Inject;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+
+import java.util.List;
+
+@Path("/api/%s")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class %sResource {
+
+    @Inject
+    %sService service;
+
+    @POST
+    public Response create(@Valid %sRequestDTO dto) {
+        return Response.status(Response.Status.CREATED)
+                .entity(service.create(dto))
+                .build();
+    }
+
+    @GET
+    public List<%sResponseDTO> findAll() {
+        return service.findAll();
+    }
+
+    @GET
+    @Path("/{id}")
+    public %sResponseDTO findById(@PathParam("id") Long id) {
+        return service.findById(id);
+    }
+
+    @PUT
+    @Path("/{id}")
+    public %sResponseDTO update(@PathParam("id") Long id, @Valid %sRequestDTO dto) {
+        return service.update(id, dto);
+    }
+
+    @DELETE
+    @Path("/{id}")
+    public Response delete(@PathParam("id") Long id) {
+        service.delete(id);
+        return Response.noContent().build();
+    }
+}
+]],
+          base_package,
+          base_package, name,
+          base_package, name,
+          base_package, name,
+          name:lower(),
+          name,
+          name,
+          name,
+          name,
+          name,
+          name, name
+        )
+      else
+        -- Spring Boot Controller
+        controller_filename = name .. "Controller"
+        controller_subpackage = "controller"
+        controller_or_resource_content = string.format(
+          [[
 package %s.controller;
 
 import %s.dto.%sRequestDTO;
@@ -369,26 +522,21 @@ public class %sController {
     }
 }
 ]],
-        base_package,
-        base_package,
-        name,
-        base_package,
-        name,
-        base_package,
-        name,
-        name:lower(),
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name,
-        name
-      )
+          base_package,
+          base_package, name,
+          base_package, name,
+          base_package, name,
+          name:lower(),
+          name,
+          name,
+          name, name,
+          name, name,
+          name,
+          name,
+          name, name,
+          name
+        )
+      end
 
       -- Creates the directories and files
       local function create_file(subpackage, filename, content)
@@ -403,19 +551,33 @@ public class %sController {
       end
 
       create_file("model", name, entity_content)
-      create_file("repository", name .. "Repository", repository_content)
+      
+      -- Repository: only for Spring (Quarkus uses PanacheEntity)
+      if framework == "spring" then
+        create_file("repository", name .. "Repository", repository_content)
+      end
+      
       create_file("dto", name .. "RequestDTO", dto_request_content)
       create_file("dto", name .. "ResponseDTO", dto_response_content)
       create_file("service", name .. "Service", service_content)
-      create_file("controller", name .. "Controller", controller_content)
+      
+      -- Controller (Spring) or Resource (Quarkus)
+      create_file(controller_subpackage, controller_filename, controller_or_resource_content)
 
-      vim.notify(
-        string.format(
-          "✨ Complete CRUD generated for %s!\n📁 Entity, Repository, Service, Controller, and DTOs created.",
+      local success_message
+      if framework == "quarkus" then
+        success_message = string.format(
+          "✨ Quarkus CRUD generado para %s!\n📁 Entity (Panache), Resource, Service, y DTOs creados.",
           name
-        ),
-        vim.log.levels.INFO
-      )
+        )
+      else
+        success_message = string.format(
+          "✨ Spring Boot CRUD generado para %s!\n📁 Entity, Repository, Service, Controller, y DTOs creados.",
+          name
+        )
+      end
+
+      vim.notify(success_message, vim.log.levels.INFO)
     end)
   end)
 end
