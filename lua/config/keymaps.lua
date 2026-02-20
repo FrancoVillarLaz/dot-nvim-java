@@ -63,9 +63,6 @@ vim.api.nvim_set_keymap("x", "<A-k>", "<Nop>", { noremap = true, silent = true }
 vim.api.nvim_set_keymap("x", "J", "<Nop>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("x", "K", "<Nop>", { noremap = true, silent = true })
 
--- Redefine Ctrl+s to save with the custom function
-vim.api.nvim_set_keymap("n", "<C-s>", ":lua SaveFile()<CR>", { noremap = true, silent = true })
-
 -- Grep keybinding for visual mode - search selected text
 vim.keymap.set("v", "<leader>sg", function()
   -- Get the selected text

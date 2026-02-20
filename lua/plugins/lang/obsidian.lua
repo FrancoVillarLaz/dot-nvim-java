@@ -26,6 +26,8 @@ return {
       date_format = "%Y-%m-%d-%a",
       time_format = "%H:%M",
     },
+
+    legacy_commands = true,
     notes_subdir = "hubs", -- Opcional, default es raíz del vault
     new_notes_location = "notes_subdir",
     callbacks = {

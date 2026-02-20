@@ -279,6 +279,7 @@ return {
   -- Description: A Neovim plugin for creating a customizable dashboard.
   {
     "folke/snacks.nvim",
+    priority = 1000, -- Carga después de LazyVim para que nuestra config prevalezca
     keys = {
       {
         "<leader>fb",
@@ -289,7 +290,11 @@ return {
       },
     },
     opts = {
-      notifier = {},
+      notifier = {
+        enabled = true,
+        origin = "top_left",
+        margin = { top = 1, right = 0, bottom = 0, left = 2 },
+      },
       image = {},
       picker = {
         exclude = {
@@ -323,7 +328,6 @@ return {
           { section = "startup" },
         },
         preset = {
-          -- TU FRANQUIVIM ORIGINAL MANTENIDO
           header = [[
        _________________________________________________________________________________
       /                                                                                 \
