@@ -69,30 +69,106 @@ return {
           transparent = true, -- do not set background color
           dimInactive = false, -- dim inactive window `:h hl-NormalNC`
           terminalColors = true, -- define vim.g.terminal_color_{0,17}
-          colors = { -- add/modify theme and palette colors
-            palette = {},
+          colors = {
+            palette = {
+              -- Tussi wallust overrides: teñir kanagawa con acentos púrpura/magenta
+              -- Mantenemos los colores funcionales (verde=string, azul=function)
+              -- pero desplazamos violetas, rosas y fondos hacia wallust
+
+              -- Keywords/statements: púrpura wallust en vez de oniViolet
+              oniViolet = "#9A538C",
+              -- Parameters: rosa claro wallust
+              oniViolet2 = "#D1A9BD",
+              -- Punctuation: gris rosado
+              springViolet2 = "#927684",
+              -- Special: magenta medio
+              springViolet1 = "#864B68",
+              -- Numbers: rosa fuerte wallust en vez de sakuraPink
+              sakuraPink = "#B3648B",
+              -- Comments: gris violeta (legible pero discreto)
+              fujiGray = "#6B5A64",
+              -- Line numbers / nontext
+              sumiInk6 = "#514858",
+
+              -- Backgrounds teñidos hacia wallust
+              sumiInk0 = "#1E1926",
+              sumiInk1 = "#211C2A",
+              sumiInk2 = "#241F2D",
+              sumiInk3 = "#2A2331",
+              sumiInk4 = "#352E3D",
+              sumiInk5 = "#413A4A",
+
+              -- Popups/floats con tinte wallust
+              waveBlue1 = "#2E2438",
+              waveBlue2 = "#3D3148",
+
+              -- Selection visual
+              -- waveBlue1 se usa para bg_visual, ya teñido arriba
+            },
             theme = {
               wave = {},
               lotus = {},
               dragon = {},
               all = {
                 ui = {
-                  bg_gutter = "none", -- set bg color for normal background
-                  bg_sidebar = "none", -- set bg color for sidebar like nvim-tree
-                  bg_float = "none", -- set bg color for floating windows
+                  bg_gutter = "none",
+                  bg_sidebar = "none",
+                  bg_float = "none",
                 },
               },
             },
           },
-          overrides = function(colors) -- add/modify highlights
+          overrides = function(colors)
+            local palette = colors.palette
             return {
+              -- Transparencia
               LineNr = { bg = "none" },
               NormalFloat = { bg = "none" },
-              FloatBorder = { bg = "none" },
-              FloatTitle = { bg = "none" },
+              FloatBorder = { bg = "none", fg = palette.springViolet1 },
+              FloatTitle = { bg = "none", fg = palette.sakuraPink, bold = true },
               TelescopeNormal = { bg = "none" },
-              TelescopeBorder = { bg = "none" },
+              TelescopeBorder = { bg = "none", fg = palette.springViolet1 },
               LspInfoBorder = { bg = "none" },
+
+              -- CursorLine con tinte wallust sutil
+              CursorLine = { bg = "#302839" },
+              Visual = { bg = "#3D3148" },
+
+              -- Matching brackets
+              MatchParen = { fg = "#E4C9D6", bg = "#514858", bold = true },
+
+              -- Indent guides sutiles
+              IblIndent = { fg = "#352E3D" },
+              IblScope = { fg = "#9A538C" },
+
+              -- Git diff con tinte (mantener funcionalidad pero armonizar)
+              DiffAdd = { bg = "#2B2E33" },
+              DiffDelete = { bg = "#33242E" },
+              DiffChange = { bg = "#2A2535" },
+
+              -- Diagnostics: mantener colores funcionales pero suavizar
+              DiagnosticVirtualTextHint = { fg = "#6A9589", bg = "none" },
+              DiagnosticVirtualTextInfo = { fg = "#658594", bg = "none" },
+              DiagnosticVirtualTextWarn = { fg = "#DCA561", bg = "none" },
+              DiagnosticVirtualTextError = { fg = "#C34043", bg = "none" },
+
+              -- Which-key
+              WhichKeyFloat = { bg = "none" },
+              WhichKeyBorder = { bg = "none", fg = palette.springViolet1 },
+
+              -- Neo-tree
+              NeoTreeNormal = { bg = "none" },
+              NeoTreeNormalNC = { bg = "none" },
+              NeoTreeRootName = { fg = palette.sakuraPink, bold = true },
+              NeoTreeDirectoryIcon = { fg = palette.oniViolet },
+              NeoTreeDirectoryName = { fg = palette.oniViolet2 },
+              NeoTreeGitModified = { fg = palette.sakuraPink },
+
+              -- Noice / cmdline
+              NoiceCmdlinePopupBorder = { fg = palette.springViolet1, bg = "none" },
+
+              -- Snacks
+              SnacksNotifierBorderInfo = { fg = palette.springViolet1 },
             }
           end,
           theme = "wave", -- Load "wave" theme

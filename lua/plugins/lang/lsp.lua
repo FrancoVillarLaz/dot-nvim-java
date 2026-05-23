@@ -58,6 +58,16 @@ return {
             },
           },
         },
+        --------------------------------------------------
+        -- PHP (Intelephense)
+        --------------------------------------------------
+        intelephense = {
+          settings = {
+            php = {
+              memoryLimit = 1024, -- Útil para tu servidor de 8GB
+            },
+          },
+        },
       },
     },
   },

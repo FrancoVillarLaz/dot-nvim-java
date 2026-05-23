@@ -59,11 +59,11 @@ return {
         after = "", -- Sin texto después para minimalismo
       },
       colors = {
-        error = { "#e76f51" }, -- Coral zen
-        warning = { "#f4a261" }, -- Arena zen
-        info = { "#457b9d" }, -- Acero zen
-        hint = { "#84a98c" }, -- Musgo zen
-        default = { "#a8939b" }, -- Lavanda zen
+        error = { "#B3648B" }, -- Rosa fuerte wallust
+        warning = { "#864B68" }, -- Magenta medio wallust
+        info = { "#9A538C" }, -- Púrpura wallust
+        hint = { "#D1A9BD" }, -- Rosa claro wallust
+        default = { "#927684" }, -- Gris rosado wallust
       },
     },
   },
@@ -116,11 +116,34 @@ return {
     requires = { "nvim-tree/nvim-web-devicons", opt = true }, -- Optional dependency for icons
     opts = {
       options = {
-        theme = "kanagawa", -- Tema zen que coincide con colorscheme
-        icons_enabled = true, -- Enable icons in the statusline
-        component_separators = { left = "", right = "" }, -- Sin separadores para zen
-        section_separators = { left = "", right = "" }, -- Sin separadores para zen
-        globalstatus = true, -- Una sola statusline zen
+        theme = {
+          normal = {
+            a = { fg = "#2A2331", bg = "#9A538C", gui = "bold" },
+            b = { fg = "#D1A9BD", bg = "#514858" },
+            c = { fg = "#927684", bg = "NONE" },
+          },
+          insert = {
+            a = { fg = "#2A2331", bg = "#B3648B", gui = "bold" },
+          },
+          visual = {
+            a = { fg = "#2A2331", bg = "#864B68", gui = "bold" },
+          },
+          replace = {
+            a = { fg = "#2A2331", bg = "#723E69", gui = "bold" },
+          },
+          command = {
+            a = { fg = "#2A2331", bg = "#D1A9BD", gui = "bold" },
+          },
+          inactive = {
+            a = { fg = "#927684", bg = "NONE" },
+            b = { fg = "#927684", bg = "NONE" },
+            c = { fg = "#514858", bg = "NONE" },
+          },
+        },
+        icons_enabled = true,
+        component_separators = { left = "", right = "" },
+        section_separators = { left = "", right = "" },
+        globalstatus = true,
       },
       sections = {
         lualine_a = { mode }, -- Símbolo zen del modo
@@ -230,9 +253,9 @@ return {
 
           local icon, color = require("nvim-web-devicons").get_icon_color(filename) -- Get the icon and color for the file
           return {
-            { icon, guifg = color or "#84a98c" }, -- Verde zen por defecto
+            { icon, guifg = color or "#9A538C" }, -- Magenta wallust
             { " " },
-            { filename, guifg = "#f4f3ee" }, -- Texto zen
+            { filename, guifg = "#D1A9BD" }, -- Texto wallust
           }
         end,
       })

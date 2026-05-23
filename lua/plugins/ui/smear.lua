@@ -7,7 +7,7 @@ return {
     distance_stop_animating = 0.3,
 
     time_interval = 12, -- Más lento para ser zen
-    cursor_color = "#84a98c", -- Verde musgo zen
+    cursor_color = "#B3648B", -- Magenta wallust
 
     -- Partículas zen - más sutiles
     particles_enabled = true,

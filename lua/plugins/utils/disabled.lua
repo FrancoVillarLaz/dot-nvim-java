@@ -40,6 +40,6 @@ return {
     -- URL: https://github.com/greggh/claude-code.nvim
     -- Description: Neovim integration for Claude Code AI assistant
     "coder/claudecode.nvim",
-    enabled = false,
+    enabled = true,
   },
 }
